@@ -1,6 +1,6 @@
 import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
-import { $ZodError } from "zod/v4/core";
+import { $ZodAsyncError, $ZodError } from "zod/v4/core";
 
 import { attemptParse } from "@/attempt/parse";
 
@@ -32,5 +32,19 @@ describe("attemptParse function should fail", () => {
     expect(error.cause).toBeInstanceOf($ZodError);
     expect(error.meta).toStrictEqual(options);
     expect(error.issues).toStrictEqual(zodResult.error.issues);
+  });
+  test("when the schema is async", () => {
+    const value = "value";
+    const schema = z.literal(value).transform(async () => {
+      throw new Error("Kaboom, baby!");
+    });
+    const options = { reportInput: true };
+    const result = attemptParse({ schema, value }, options);
+
+    assert(result.success === false);
+    const error = result.error;
+    assert(error.code === "UNSUPPORTED_ASYNC_SCHEMA_ERROR");
+    expect(error.cause).toBeInstanceOf($ZodAsyncError);
+    expect(error.meta).toStrictEqual(options);
   });
 });
