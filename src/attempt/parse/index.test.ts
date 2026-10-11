@@ -35,9 +35,13 @@ describe("attemptParse function should fail", () => {
   });
   test("when the schema is async", () => {
     const value = "value";
-    const schema = z.literal(value).transform(async () => {
-      throw new Error("Kaboom, baby!");
-    });
+    const schema = z.string().refine(
+      async (name) => {
+        await new Promise((r) => setTimeout(r, 50));
+        return !new Set(["admin", "root"]).has(name);
+      },
+      { error: "Username is already taken" },
+    );
     const options = { reportInput: true };
     const result = attemptParse({ schema, value }, options);
 
