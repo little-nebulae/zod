@@ -1,16 +1,16 @@
-import type { Simplify } from "type-fest";
-import type { $ZodError, $ZodIssue, $ZodType, ParseContext } from "zod/v4/core";
+import type { $ZodError, $ZodIssue, $ZodType } from "zod/v4/core";
 
 import { BaseError } from "@little-nebulae/error";
 import { prettifyError } from "zod/v4/core";
 
 import type { InvalidDataErrorCode } from "@/error/codes";
+import type { SimplifiedParseContext } from "@/types";
 
 import { INVALID_DATA_ERROR_CODE } from "@/error/codes";
 
 export class InvalidDataError<
   TSchema extends $ZodType,
-  TMeta extends Simplify<ParseContext<$ZodIssue>>,
+  TMeta extends SimplifiedParseContext,
 > extends BaseError<InvalidDataErrorCode, $ZodError<TSchema>, TMeta> {
   readonly name = "InvalidDataError";
   readonly code = INVALID_DATA_ERROR_CODE;
