@@ -8,14 +8,14 @@ import {
 import { attempt } from "@little-nebulae/result";
 import { $ZodAsyncError, $ZodError, parse } from "zod/v4/core";
 
-import type { SimplifiedParseContext } from "@/types";
+import type { ParseAttemptContext } from "@/types";
 
 import { InvalidDataError } from "@/error/classes/invalid-data";
 import { UnsupportedAsyncSchemaError } from "@/error/classes/unsuppported-async-schema";
 
 export function attemptParse<
   TSchema extends $ZodType,
-  TContext extends SimplifiedParseContext,
+  TContext extends ParseAttemptContext,
 >({
   schema,
   value,

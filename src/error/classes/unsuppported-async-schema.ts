@@ -3,12 +3,12 @@ import type { $ZodAsyncError } from "zod/v4/core";
 import { BaseError } from "@little-nebulae/error";
 
 import type { UnsupportedAsyncSchemaErrorCode } from "@/error/codes";
-import type { SimplifiedParseContext } from "@/types";
+import type { ParseAttemptContext } from "@/types";
 
 import { UNSUPPORTED_ASYNC_SCHEMA_ERROR_CODE } from "@/error/codes";
 
 export class UnsupportedAsyncSchemaError<
-  TMeta extends SimplifiedParseContext,
+  TMeta extends ParseAttemptContext,
 > extends BaseError<UnsupportedAsyncSchemaErrorCode, $ZodAsyncError, TMeta> {
   readonly name = "UnsupportedAsyncSchemaError";
   readonly code = UNSUPPORTED_ASYNC_SCHEMA_ERROR_CODE;

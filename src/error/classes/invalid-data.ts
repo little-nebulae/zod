@@ -4,13 +4,13 @@ import { BaseError } from "@little-nebulae/error";
 import { prettifyError } from "zod/v4/core";
 
 import type { InvalidDataErrorCode } from "@/error/codes";
-import type { SimplifiedParseContext } from "@/types";
+import type { ParseAttemptContext } from "@/types";
 
 import { INVALID_DATA_ERROR_CODE } from "@/error/codes";
 
 export class InvalidDataError<
   TSchema extends $ZodType,
-  TMeta extends SimplifiedParseContext,
+  TMeta extends ParseAttemptContext,
 > extends BaseError<InvalidDataErrorCode, $ZodError<TSchema>, TMeta> {
   readonly name = "InvalidDataError";
   readonly code = INVALID_DATA_ERROR_CODE;
