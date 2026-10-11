@@ -33,6 +33,7 @@ describe("attemptParse function should fail", () => {
     expect(error.meta).toStrictEqual(options);
     expect(error.issues).toStrictEqual(zodResult.error.issues);
   });
+
   test("when the schema is async", () => {
     const value = "value";
     const schema = z.string().refine(
