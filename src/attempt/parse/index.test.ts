@@ -9,7 +9,7 @@ describe("attemptParse function should succeed", () => {
   test("when the input value satisfies the schema", () => {
     const value = "value";
     const schema = z.literal(value);
-    const result = attemptParse({ schema, value, context: {} });
+    const result = attemptParse({ schema, value });
 
     assert(result.success);
     expect(result.data).toBe(value);
@@ -21,16 +21,16 @@ describe("attemptParse function should fail", () => {
   test("when the input value does NOT satisfy the schema", () => {
     const value = "value";
     const schema = z.boolean();
-    const context = { reportInput: true };
-    const zodResult = schema.safeParse(value, context);
-    const result = attemptParse({ schema, value, context });
+    const options = { reportInput: true };
+    const zodResult = schema.safeParse(value, options);
+    const result = attemptParse({ schema, value }, options);
 
     assert(zodResult.success === false);
     assert(result.success === false);
     const error = result.error;
     assert(error.code === "INVALID_DATA_ERROR");
     expect(error.cause).toBeInstanceOf($ZodError);
-    expect(error.meta).toStrictEqual(context);
+    expect(error.meta).toStrictEqual(options);
     expect(error.issues).toStrictEqual(zodResult.error.issues);
   });
 });

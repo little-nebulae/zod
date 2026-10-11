@@ -8,36 +8,34 @@ import {
 import { attempt } from "@little-nebulae/result";
 import { $ZodAsyncError, $ZodError, parse } from "zod/v4/core";
 
-import type { ParseAttemptContext } from "@/types";
+import type { ParseOptions } from "@/types";
 
 import { InvalidDataError } from "@/error/classes/invalid-data";
 import { UnsupportedAsyncSchemaError } from "@/error/classes/unsuppported-async-schema";
 
-export function attemptParse<
-  TSchema extends $ZodType,
-  TContext extends ParseAttemptContext,
->({
-  schema,
-  value,
-  context,
-}: {
-  schema: TSchema;
-  value: unknown;
-  context: TContext;
-}) {
+export function attemptParse<TSchema extends $ZodType>(
+  {
+    schema,
+    value,
+  }: {
+    schema: TSchema;
+    value: unknown;
+  },
+  options: ParseOptions = {},
+) {
   return attempt({
-    tryFn: () => parse(schema, value, context),
+    tryFn: () => parse(schema, value, options),
     catchFn: (error) => {
       if (error instanceof $ZodError) {
         return new InvalidDataError({
           cause: error as $ZodError<TSchema>,
-          meta: context,
+          meta: options,
         });
       }
       if (error instanceof $ZodAsyncError) {
         return new UnsupportedAsyncSchemaError({
           cause: error,
-          meta: context,
+          meta: options,
         });
       }
       return new UnexpectedError({
