@@ -21,14 +21,16 @@ describe("attemptParse function should fail", () => {
   test("when the input value does NOT satisfy the schema", () => {
     const value = "value";
     const schema = z.boolean();
-    const zodResult = schema.safeParse(value);
-    const result = attemptParse({ schema, value, context: {} });
+    const context = { reportInput: true };
+    const zodResult = schema.safeParse(value, context);
+    const result = attemptParse({ schema, value, context });
 
     assert(zodResult.success === false);
     assert(result.success === false);
     const error = result.error;
     assert(error.code === "INVALID_DATA_ERROR");
     expect(error.cause).toBeInstanceOf($ZodError);
+    expect(error.meta).toStrictEqual(context);
     expect(error.issues).toStrictEqual(zodResult.error.issues);
   });
 });
