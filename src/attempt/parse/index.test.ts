@@ -52,4 +52,24 @@ describe("attemptParse function should fail", () => {
     expect(error.cause).toBeInstanceOf($ZodAsyncError);
     expect(error.meta).toStrictEqual(options);
   });
+
+  test("with an UnexpectedError when something throws in transform's callback", () => {
+    const value = "value";
+    const message = "Kaboom, baby!";
+    const typeError = new TypeError(message);
+    const schema = z.string().transform(() => {
+      throw typeError;
+    });
+    const options = { reportInput: true };
+    const result = attemptParse({ schema, value }, options);
+
+    assert(result.success === false);
+    const error = result.error;
+    assert(error.code === "UNEXPECTED_ERROR");
+    expect(error.meta).toStrictEqual(options);
+    const cause = error.cause;
+    assert(cause instanceof TypeError);
+    expect(cause).toStrictEqual(typeError);
+    expect(cause.message).toBe(message);
+  });
 });

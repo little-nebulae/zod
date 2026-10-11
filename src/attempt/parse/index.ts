@@ -44,7 +44,7 @@ export function attemptParse<TSchema extends $ZodType>(
           reason: DEFAULT_FAILURE_REASON,
         }),
         cause: error,
-        meta: null,
+        meta: options,
       });
     },
   });
