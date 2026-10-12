@@ -1,4 +1,4 @@
-import type { $ZodError, $ZodIssue, $ZodType } from "zod/v4/core";
+import type { $ZodError, $ZodIssue } from "zod/v4/core";
 
 import { BaseError } from "@little-nebulae/error";
 import { prettifyError } from "zod/v4/core";
@@ -8,9 +8,9 @@ import type { ParseOptions } from "@/types";
 
 import { INVALID_DATA_ERROR_CODE } from "@/error/codes";
 
-export class InvalidDataError<TSchema extends $ZodType> extends BaseError<
+export class InvalidDataError<T> extends BaseError<
   InvalidDataErrorCode,
-  $ZodError<TSchema>,
+  $ZodError<T>,
   ParseOptions
 > {
   readonly name = "InvalidDataError";
@@ -23,7 +23,7 @@ export class InvalidDataError<TSchema extends $ZodType> extends BaseError<
     meta,
   }: {
     message?: string;
-    cause: $ZodError<TSchema>;
+    cause: $ZodError<T>;
     meta: ParseOptions;
   }) {
     super({ message: message ?? prettifyError(cause), cause, meta });
