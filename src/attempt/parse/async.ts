@@ -1,4 +1,4 @@
-import type { $ZodType } from "zod/v4/core";
+import type { $ZodType, output } from "zod/v4/core";
 
 import {
   composeErrorMessage,
@@ -27,7 +27,7 @@ export async function attemptParseAsync<TSchema extends $ZodType>(
     catchFn: (error) => {
       if (error instanceof $ZodError) {
         return new InvalidDataError({
-          cause: error as $ZodError<TSchema>,
+          cause: error as $ZodError<output<TSchema>>,
           meta: options,
         });
       }
