@@ -25,7 +25,7 @@ export async function attempValidateAsync<TSchema extends $ZodType>(
     catchFn: (error) =>
       new UnexpectedError({
         message: composeErrorMessage({
-          operation: "parse value with schema asynchronously",
+          operation: "validate value with schema asynchronously",
           reason: DEFAULT_FAILURE_REASON,
         }),
         cause: error,
