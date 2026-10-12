@@ -1,5 +1,6 @@
 import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
+import { $ZodError } from "zod/v4/core";
 
 import { attemptParseAsync } from "@/attempt/parse/async";
 
@@ -24,5 +25,39 @@ describe("attemptParseAsync should succeed", async () => {
 
     assert(result.success);
     expect(result.data).toBe(value);
+  });
+});
+
+// Failure cases
+describe("attemptParseAsync should fail with", async () => {
+  test("InvalidDataError when the input value doesn't satisfy the schema", async () => {
+    const value = "value";
+    const schema = z.string().refine(async (arg) => {
+      await new Promise((r) => setTimeout(r, 50));
+      return arg !== value;
+    });
+    const options = { reportInput: true };
+    const zodResult = await schema.safeParseAsync(value, options);
+    const result = await attemptParseAsync({ schema, value }, options);
+
+    assert(zodResult.success === false);
+    assert(result.success === false);
+
+    const zodError = zodResult.error;
+    const error = result.error;
+    assert(error.code === "INVALID_DATA_ERROR");
+    expect(error.cause).not.toBeInstanceOf(z.ZodError);
+    expect(error.cause).toBeInstanceOf($ZodError);
+    expect(error.meta).toStrictEqual(options);
+
+    const issues = error.issues;
+    expect(issues).toStrictEqual(zodError.issues);
+    expect(issues).toHaveLength(1);
+
+    const issue = issues[0];
+    assert(issue !== undefined);
+    assert(issue.code === "custom");
+    expect(issue.input).toBe(value);
+    expect(issue.path).toHaveLength(0);
   });
 });
