@@ -1,8 +1,6 @@
-import type { output, ZodSafeParseResult, ZodType } from "zod";
-import type { $ZodType } from "zod/v4/core";
+import type { ZodSafeParseResult } from "zod";
 
 import { fail, succeed } from "@little-nebulae/result";
-import { z } from "zod";
 
 import type { ParseOptions } from "@/types";
 
@@ -15,4 +13,5 @@ export function wrapZodResult<T>(
   if (result.success) {
     return succeed(result.data);
   }
+  return fail(new InvalidDataError({ cause: result.error, meta: options }));
 }

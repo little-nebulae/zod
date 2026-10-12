@@ -9,3 +9,5 @@ export * from "@/attempt/parse/async";
 
 export * from "@/attempt/validate";
 export * from "@/attempt/validate/async";
+
+export * from "@/utils/wrap-result";
