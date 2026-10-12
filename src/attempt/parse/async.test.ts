@@ -60,4 +60,26 @@ describe("attemptParseAsync should fail with", async () => {
     expect(issue.input).toBe(value);
     expect(issue.path).toHaveLength(0);
   });
+
+  test("UnexpectedError when the an async transform callback throws", async () => {
+    const value = "value";
+    const message = "Kaboom, baby!";
+    const typeError = new TypeError(message);
+    const schema = z.literal(value).transform(async () => {
+      await new Promise((r) => setTimeout(r, 50));
+      throw typeError;
+    });
+    const options = { reportInput: true };
+
+    const result = await attemptParseAsync({ schema, value }, options);
+    assert(result.success === false);
+
+    const error = result.error;
+    assert(error.code === "UNEXPECTED_ERROR");
+    expect(error.meta).toStrictEqual(options);
+
+    const cause = error.cause;
+    assert(cause instanceof TypeError);
+    expect(cause.message).toBe(message);
+  });
 });
