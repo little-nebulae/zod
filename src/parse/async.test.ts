@@ -2,7 +2,7 @@ import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 import { $ZodError } from "zod/v4/core";
 
-import { zodParseAsync } from "@/attempt/parse/async";
+import { zodParseAsync } from "@/parse/async";
 
 // Success cases
 describe("zodParseAsync should succeed", async () => {
