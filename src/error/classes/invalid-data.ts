@@ -3,18 +3,18 @@ import type { $ZodError, $ZodIssue } from "zod/v4/core";
 import { BaseError } from "@little-nebulae/error";
 import { prettifyError } from "zod/v4/core";
 
-import type { InvalidDataErrorCode } from "@/error/codes";
 import type { ParseOptions } from "@/types";
 
-import { INVALID_DATA_ERROR_CODE } from "@/error/codes";
+export const INVALID_DATA_ZOD_ERROR_CODE = "INVALID_DATA_ZOD_ERROR";
+export type InvalidDataZodErrorCode = typeof INVALID_DATA_ZOD_ERROR_CODE;
 
-export class InvalidDataError<T> extends BaseError<
-  InvalidDataErrorCode,
+export class InvalidDataZodError<T> extends BaseError<
+  InvalidDataZodErrorCode,
   $ZodError<T>,
   ParseOptions
 > {
-  readonly name = "InvalidDataError";
-  readonly code = INVALID_DATA_ERROR_CODE;
+  readonly name = "InvalidDataZodError";
+  readonly code = INVALID_DATA_ZOD_ERROR_CODE;
   readonly issues: $ZodIssue[];
 
   constructor({

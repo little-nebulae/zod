@@ -2,18 +2,20 @@ import type { $ZodAsyncError } from "zod/v4/core";
 
 import { BaseError } from "@little-nebulae/error";
 
-import type { UnsupportedAsyncSchemaErrorCode } from "@/error/codes";
 import type { ParseOptions } from "@/types";
 
-import { UNSUPPORTED_ASYNC_SCHEMA_ERROR_CODE } from "@/error/codes";
+export const UNSUPPORTED_ASYNC_SCHEMA_ZOD_ERROR_CODE =
+  "UNSUPPORTED_ASYNC_SCHEMA_ZOD_ERROR";
+export type UnsupportedAsyncSchemaZodErrorCode =
+  typeof UNSUPPORTED_ASYNC_SCHEMA_ZOD_ERROR_CODE;
 
-export class UnsupportedAsyncSchemaError extends BaseError<
-  UnsupportedAsyncSchemaErrorCode,
+export class UnsupportedAsyncSchemaZodError extends BaseError<
+  UnsupportedAsyncSchemaZodErrorCode,
   $ZodAsyncError,
   ParseOptions
 > {
-  readonly name = "UnsupportedAsyncSchemaError";
-  readonly code = UNSUPPORTED_ASYNC_SCHEMA_ERROR_CODE;
+  readonly name = "UnsupportedAsyncSchemaZodError";
+  readonly code = UNSUPPORTED_ASYNC_SCHEMA_ZOD_ERROR_CODE;
 
   constructor({
     message,
