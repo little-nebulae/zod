@@ -1,10 +1,6 @@
 import type { $ZodType } from "zod/v4/core";
 
-import {
-  composeErrorMessage,
-  DEFAULT_FAILURE_REASON,
-  UnexpectedError,
-} from "@little-nebulae/error";
+import { composeErrorMessage, UnexpectedError } from "@little-nebulae/error";
 import { attemptAsync } from "@little-nebulae/result";
 import { validateAsync } from "zod/v4/core";
 
@@ -26,7 +22,6 @@ export async function attempValidateAsync<TSchema extends $ZodType>(
       new UnexpectedError({
         message: composeErrorMessage({
           operation: "validate value with schema asynchronously",
-          reason: DEFAULT_FAILURE_REASON,
         }),
         cause: error,
         meta: options,
