@@ -5,14 +5,14 @@ import { fail, succeed } from "@little-nebulae/result";
 
 import type { ParseOptions } from "@/types";
 
-import { InvalidDataError } from "@/error/classes/invalid-data";
+import { ZodParseError } from "@/errors/parse";
 
 export function wrapZodResult<T>(
   result: ZodSafeParseResult<T>,
   options: ParseOptions = {},
-): Result<T, InvalidDataError<T>> {
+): Result<T, ZodParseError<T>> {
   if (result.success) {
     return succeed(result.data);
   }
-  return fail(new InvalidDataError({ cause: result.error, meta: options }));
+  return fail(new ZodParseError({ cause: result.error, meta: options }));
 }
