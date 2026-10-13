@@ -2,14 +2,14 @@ import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 import { $ZodAsyncError, $ZodError } from "zod/v4/core";
 
-import { attemptParse } from "@/attempt/parse";
+import { zodParse } from "@/attempt/parse";
 
 // Success cases
-describe("attemptParse function should succeed", () => {
+describe("zodParse function should succeed", () => {
   test("when the input value satisfies the schema", () => {
     const value = "value";
     const schema = z.literal(value);
-    const result = attemptParse({ schema, value });
+    const result = zodParse({ schema, value });
 
     assert(result.success);
     expect(result.data).toBe(value);
@@ -17,18 +17,18 @@ describe("attemptParse function should succeed", () => {
 });
 
 // Failure cases
-describe("attemptParse function should fail", () => {
+describe("zodParse function should fail", () => {
   test("when the input value does NOT satisfy the schema", () => {
     const value = "value";
     const schema = z.boolean();
     const options = { reportInput: true };
     const zodResult = schema.safeParse(value, options);
-    const result = attemptParse({ schema, value }, options);
+    const result = zodParse({ schema, value }, options);
 
     assert(zodResult.success === false);
     assert(result.success === false);
     const error = result.error;
-    assert(error.code === "INVALID_DATA_ERROR");
+    assert(error.code === "ZOD_PARSE_ERROR");
     expect(error.cause).toBeInstanceOf($ZodError);
     expect(error.meta).toStrictEqual(options);
     expect(error.issues).toStrictEqual(zodResult.error.issues);
@@ -44,11 +44,11 @@ describe("attemptParse function should fail", () => {
       { error: "Username is already taken" },
     );
     const options = { reportInput: true };
-    const result = attemptParse({ schema, value }, options);
+    const result = zodParse({ schema, value }, options);
 
     assert(result.success === false);
     const error = result.error;
-    assert(error.code === "UNSUPPORTED_ASYNC_SCHEMA_ERROR");
+    assert(error.code === "ZOD_ASYNC_ERROR");
     expect(error.cause).toBeInstanceOf($ZodAsyncError);
     expect(error.meta).toStrictEqual(options);
   });
@@ -61,7 +61,7 @@ describe("attemptParse function should fail", () => {
       throw typeError;
     });
     const options = { reportInput: true };
-    const result = attemptParse({ schema, value }, options);
+    const result = zodParse({ schema, value }, options);
 
     assert(result.success === false);
     const error = result.error;

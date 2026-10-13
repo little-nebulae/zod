@@ -1,19 +1,15 @@
 import type { $ZodType, output } from "zod/v4/core";
 
-import {
-  composeErrorMessage,
-  DEFAULT_FAILURE_REASON,
-  UnexpectedError,
-} from "@little-nebulae/error";
+import { composeErrorMessage, UnexpectedError } from "@little-nebulae/error";
 import { attempt } from "@little-nebulae/result";
 import { $ZodAsyncError, $ZodError, parse } from "zod/v4/core";
 
 import type { ParseOptions } from "@/types";
 
-import { InvalidDataError } from "@/error/classes/invalid-data";
-import { UnsupportedAsyncSchemaError } from "@/error/classes/unsuppported-async-schema";
+import { ZodAsyncError } from "@/errors/async";
+import { ZodParseError } from "@/errors/parse";
 
-export function attemptParse<TSchema extends $ZodType>(
+export function zodParse<TSchema extends $ZodType>(
   {
     schema,
     value,
@@ -27,13 +23,13 @@ export function attemptParse<TSchema extends $ZodType>(
     tryFn: () => parse(schema, value, options),
     catchFn: (error) => {
       if (error instanceof $ZodError) {
-        return new InvalidDataError({
+        return new ZodParseError({
           cause: error as $ZodError<output<TSchema>>,
           meta: options,
         });
       }
       if (error instanceof $ZodAsyncError) {
-        return new UnsupportedAsyncSchemaError({
+        return new ZodAsyncError({
           cause: error,
           meta: options,
         });
@@ -41,7 +37,6 @@ export function attemptParse<TSchema extends $ZodType>(
       return new UnexpectedError({
         message: composeErrorMessage({
           operation: "parse value with schema",
-          reason: DEFAULT_FAILURE_REASON,
         }),
         cause: error,
         meta: options,
