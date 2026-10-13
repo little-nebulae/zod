@@ -4,7 +4,7 @@ import { validate } from "zod/v4/core";
 
 import type { ParseOptions } from "@/types";
 
-export function attempValidate<TSchema extends $ZodType>(
+export function zodValidate<TSchema extends $ZodType>(
   schema: TSchema,
   value: unknown,
   options?: ParseOptions,

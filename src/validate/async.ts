@@ -6,7 +6,7 @@ import { validateAsync } from "zod/v4/core";
 
 import type { ParseOptions } from "@/types";
 
-export async function attempValidateAsync<TSchema extends $ZodType>(
+export async function zodValidateAsync<TSchema extends $ZodType>(
   {
     schema,
     value,
