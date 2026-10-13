@@ -2,17 +2,17 @@ import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 import { $ZodError } from "zod/v4/core";
 
-import { attemptParseAsync } from "@/attempt/parse/async";
+import { zodParseAsync } from "@/attempt/parse/async";
 
 // Success cases
-describe("attemptParseAsync should succeed", async () => {
+describe("zodParseAsync should succeed", async () => {
   test("when the input value satisfies an async schema", async () => {
     const value = "value";
     const schema = z.literal(value).transform(async (arg) => {
       await new Promise((r) => setTimeout(r, 50));
       return arg.toUpperCase();
     });
-    const result = await attemptParseAsync({ schema, value });
+    const result = await zodParseAsync({ schema, value });
 
     assert(result.success);
     expect(result.data).toBe(await schema.parseAsync(value));
@@ -21,7 +21,7 @@ describe("attemptParseAsync should succeed", async () => {
   test("when the input value satisfies a sync schema", async () => {
     const value = "value";
     const schema = z.literal(value);
-    const result = await attemptParseAsync({ schema, value });
+    const result = await zodParseAsync({ schema, value });
 
     assert(result.success);
     expect(result.data).toBe(value);
@@ -29,8 +29,8 @@ describe("attemptParseAsync should succeed", async () => {
 });
 
 // Failure cases
-describe("attemptParseAsync should fail with", async () => {
-  test("InvalidDataError when the input value doesn't satisfy the schema", async () => {
+describe("zodParseAsync should fail with", async () => {
+  test("ZodParseError when the input value doesn't satisfy the schema", async () => {
     const value = "value";
     const schema = z.string().refine(async (arg) => {
       await new Promise((r) => setTimeout(r, 50));
@@ -38,14 +38,14 @@ describe("attemptParseAsync should fail with", async () => {
     });
     const options = { reportInput: true };
     const zodResult = await schema.safeParseAsync(value, options);
-    const result = await attemptParseAsync({ schema, value }, options);
+    const result = await zodParseAsync({ schema, value }, options);
 
     assert(zodResult.success === false);
     assert(result.success === false);
 
     const zodError = zodResult.error;
     const error = result.error;
-    assert(error.code === "INVALID_DATA_ERROR");
+    assert(error.code === "ZOD_PARSE_ERROR");
     expect(error.cause).not.toBeInstanceOf(z.ZodError);
     expect(error.cause).toBeInstanceOf($ZodError);
     expect(error.meta).toStrictEqual(options);
@@ -73,7 +73,7 @@ describe("attemptParseAsync should fail with", async () => {
     });
     const options = { reportInput: true };
 
-    const result = await attemptParseAsync({ schema, value }, options);
+    const result = await zodParseAsync({ schema, value }, options);
     assert(result.success === false);
 
     const error = result.error;
@@ -85,7 +85,7 @@ describe("attemptParseAsync should fail with", async () => {
     expect(cause.message).toBe(message);
   });
 
-  test("InvalidDataError (not UnexpectedError) when the input value doesn't satisfy the base schema even though the transform method has a throwing callback", async () => {
+  test("ZodParseError (not UnexpectedError) when the input value doesn't satisfy the base schema even though the transform method has a throwing callback", async () => {
     const value = "22";
     const message = "Kaboom, baby!";
     const typeError = new TypeError(message);
@@ -98,13 +98,13 @@ describe("attemptParseAsync should fail with", async () => {
     const options = { reportInput: true };
 
     const zodResult = await schema.safeParseAsync(value, options);
-    const result = await attemptParseAsync({ schema, value }, options);
+    const result = await zodParseAsync({ schema, value }, options);
     assert(zodResult.success === false);
     assert(result.success === false);
 
     const zodError = zodResult.error;
     const error = result.error;
-    assert(error.code === "INVALID_DATA_ERROR");
+    assert(error.code === "ZOD_PARSE_ERROR");
     expect(error.cause).not.toBeInstanceOf(z.ZodError);
     expect(error.cause).toBeInstanceOf($ZodError);
     expect(error.meta).toStrictEqual(options);
