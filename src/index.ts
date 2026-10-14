@@ -15,5 +15,5 @@ export * from "@/compile/strict";
 
 export * from "@/utils/wrap-result";
 
-export * from "@/schemas/non-empty-string";
+export * from "@/schemas/string";
 export * from "@/schemas/number";
