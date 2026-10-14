@@ -32,15 +32,15 @@
     "@little-nebulae/result": "1.4.0",
     "@oxc-node/cli": "0.1.6",
     "@types/node": "26.6.5",
-    "oxfmt": "0.72.0",
-    "oxlint": "1.87.0",
+    "oxfmt": "0.73.0",
+    "oxlint": "1.88.0",
     "oxlint-tsgolint": "7.0.2004",
     "publint": "0.3.25",
     "tsdown": "0.23.1",
     "type-fest": "5.10.0",
     "typescript": "7.0.2",
-    "vitest": "5.0.3",
-    "zod": "4.6.6"
+    "vitest": "5.0.4",
+    "zod": "4.6.7"
   },
   "peerDependencies": {
     "@little-nebulae/error": "^1.4.0",
