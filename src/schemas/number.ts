@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-export const PositiveNumber = z.number().positive();
-export const NegativeNumber = z.number().negative();
-export const NonPositiveNumber = z.number().nonpositive();
-export const NonNegativeNumber = z.number().nonnegative();
+export const PositiveNumberSchema = z.number().positive();
+export const NegativeNumberSchema = z.number().negative();
+export const NonPositiveNumberSchema = z.number().nonpositive();
+export const NonNegativeNumberSchema = z.number().nonnegative();
 
-export const PositiveInteger = z.int().positive();
-export const NegativeInteger = z.int().negative();
-export const NonPositiveInteger = z.int().nonpositive();
-export const NonNegativeInteger = z.int().nonnegative();
+export const PositiveIntegerSchema = z.int().positive();
+export const NegativeIntegerSchema = z.int().negative();
+export const NonPositiveIntegerSchema = z.int().nonpositive();
+export const NonNegativeIntegerSchema = z.int().nonnegative();
