@@ -30,7 +30,7 @@
     "@arethetypeswrong/core": "0.18.5",
     "@little-nebulae/error": "1.4.0",
     "@little-nebulae/result": "1.4.0",
-    "@oxc-node/cli": "0.1.6",
+    "@oxc-node/cli": "0.1.7",
     "@types/node": "26.6.5",
     "oxfmt": "0.73.0",
     "oxlint": "1.88.0",
@@ -39,7 +39,7 @@
     "tsdown": "0.23.1",
     "type-fest": "5.10.0",
     "typescript": "7.0.2",
-    "vitest": "5.0.4",
+    "vitest": "5.0.5",
     "zod": "4.6.7"
   },
   "peerDependencies": {
